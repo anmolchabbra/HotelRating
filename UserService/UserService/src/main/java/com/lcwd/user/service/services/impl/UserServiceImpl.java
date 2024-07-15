@@ -5,10 +5,13 @@ import com.lcwd.user.service.exceptions.ResourceNotFoundException;
 import com.lcwd.user.service.repositories.UserRepository;
 import com.lcwd.user.service.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
+@Service
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
@@ -19,7 +22,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(User user) {
-       return userRepository.save(user);
+        String randomUserId = UUID.randomUUID().toString();
+        user.setUserID(randomUserId);
+        return userRepository.save(user);
     }
 
     @Override
@@ -34,23 +39,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User deleteUser(String userID) {
-        Optional<User> user = userRepository.findById(userID);
-        if (user.isPresent()) {
-            userRepository.delete(user.get());
-        }
-        return user.get();
+    public User deleteUser(String userId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + userId));
+
+        userRepository.delete(user);
+        return user;
     }
 
     @Override
-    public User updateUser(User user) {
-        Optional<User> userOptional = userRepository.findById(user.getUserID());
-        if (userOptional.isPresent()) {
-            User toUpdate = userOptional.get();
-            toUpdate.setAbout(user.getAbout());
-            toUpdate.setName(user.getName());
-            toUpdate.setEmail(user.getEmail());
+    public User updateUser(String userId, User updatedUser) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + userId));
+
+        if (updatedUser.getName() != null) {
+            existingUser.setName(updatedUser.getName());
         }
-        return userOptional.get();
+        if (updatedUser.getEmail() != null) {
+            existingUser.setEmail(updatedUser.getEmail());
+        }
+        if (updatedUser.getAbout() != null) {
+            existingUser.setEmail(updatedUser.getAbout());
+        }
+        return existingUser;
     }
 }
