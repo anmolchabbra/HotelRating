@@ -1,0 +1,46 @@
+# Ignore IDE specific files
+.idea/
+*.iml
+*.iws
+*.ipr
+*.iws
+*.classpath
+*.project
+
+# Ignore Spring Boot target and build directories
+/target/
+/build/
+/build.gradle
+/bin/
+
+# Ignore log files
+*.log
+
+# Ignore application properties for different environments
+/src/main/resources/application.properties
+/src/main/resources/application.yml
+
+# Ignore generated files
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Ignore test coverage directory
+/coverage/
+
+# Ignore Maven specific files
+*.jar
+*.war
+*.ear
+*.hprof
+hs_err_pid*
+
+# Ignore IntelliJ project files
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Ignore Eclipse project files
+*.classpath
+*.project
+*.settings/
